@@ -6,9 +6,6 @@
 #include <chrono>
 #include <algorithm>
 
-//чёрная магия для генерации случайных фигур (скопипащено)
-
-
 struct Color {
 	unsigned char R, G, B;
 	Color(unsigned char _R = 0, unsigned char _G = 0, unsigned char _B = 0) : R(_R), G(_G), B(_B) {}
@@ -18,6 +15,7 @@ class Shape {
 protected:
 	std::vector<Dot> corners; //т.к все фигуры четырехугольники
 	double angle;// угол
+	std::string name;
 
 	static size_t counter;// кол-во фигур
 	size_t id;//айди каждой фиугры
@@ -30,7 +28,6 @@ protected:
 public:
 	Shape(std::vector<Dot> points, Color color, double angle) :
 		id(counter++), angle(angle), color(color), corners(points) {} //консткруктор
-
 
 	virtual ~Shape() {}//деструктор
 
@@ -46,11 +43,12 @@ public:
 	Dot& max_y(Dot& a, Dot& b) const;
 	friend std::ostream& operator << (std::ostream& OS, const Shape& smth); // оператор вывода
 
+	std::string get_name(){
+		return this->name;
+	}
 
-
-									   //Задание
+    //Задание
 	bool common_side(Shape* other);
-
 };
 
 

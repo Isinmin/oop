@@ -9,12 +9,8 @@ public:
 
 																  //конструктор
 	Square(std::vector<Dot> points, Color color=Color(), double angle = 0) :Rhombus(points, color, angle) {
-		if (!is_square(points)) {
-			throw std::invalid_argument("It is not square");
-		}
-		else {
-			corners = points;
-		}
+		this->corners = points;
+		this->name = "Square";
 	}
 
 

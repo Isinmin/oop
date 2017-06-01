@@ -8,12 +8,8 @@ public:
 
 															   //конструктор
 	Trapezium(std::vector<Dot> points, Color color = Color(), double angle = 0) :Shape(points, color, angle) {
-		if (!is_trapezium(points)) {
-			throw std::invalid_argument("It is not trapezium");
-		}
-		else {
-			corners = points;
-		}
+		this->corners = points;
+		this->name = "Trapezium";
 	}
 
 

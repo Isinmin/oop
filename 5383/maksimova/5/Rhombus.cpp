@@ -19,7 +19,7 @@ bool Rhombus::is_rhombus(const std::vector<Dot>& v) {
 }
 void Rhombus::print(std::ostream& OS) const {
 	OS << "RHOMBUS" << std::endl;
-	OS << "Color: " << color.R << " " << color.G << " " << color.B << std::endl;
+	OS << "Color: " << (int) color.R << " " << (int) color.G << " " << (int) color.B << std::endl;
 	OS << "id: " << id << std::endl;
 }
 

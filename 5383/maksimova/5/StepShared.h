@@ -1,105 +1,123 @@
-#include <algorithm>
-#include <cstddef> 
+#pragma once
+#include <algorithm> // std::swap
+
 namespace stepik
 {
 	template <typename T>
-	class shared_ptr
-	{
-		template <typename T2>
+	class shared_ptr{
+		template <typename U>
 		friend class shared_ptr;
-
 	public:
-
-		explicit shared_ptr(T *ptr = nullptr) {
-			ptr_ = ptr;
-			if (ptr_) {
-				count_ = new size_t(1);
+		explicit shared_ptr(T *ptr = 0){
+			_ptr = ptr;
+			if (_ptr){
+				ref = new long(1);
 			}
-			else {
-				count_ = 0;
+			else{
+				ref = nullptr;
 			}
 		}
+
 		~shared_ptr()
 		{
-			decrement_counter();
+			release();
 		}
-		template <typename T2>
-		shared_ptr(const shared_ptr<T2> & other)
+
+		template <typename U>
+		shared_ptr(const shared_ptr<U> & other) : _ptr(other._ptr)
 		{
-			ptr_ = other.ptr_;
-			count_ = other.count_;
-			if (ptr_) {
-				++(*count_);
+			ref = other.ref;
+			if (ref) ++(*ref);
+		}
+
+		shared_ptr(const shared_ptr & other) : _ptr(other._ptr)
+		{
+			ref = other.ref;
+			if (ref) ++(*ref);
+		}
+
+		template <typename U>
+		shared_ptr& operator=(const shared_ptr<U> & other)
+		{
+			if (this != &other){
+				release();
+				_ptr = other._ptr;
+				ref = other.ref;
+				if (ref) ++(*ref);
 			}
-		}
-		template <typename T2>
-		shared_ptr& operator=(const shared_ptr<T2> & other)
-		{
-			shared_ptr tmp(other);
-			swap(tmp);
+
 			return *this;
 		}
 
-		void decrement_counter() {
-			if (count_ && ptr_ && !--(*count_)) {
-				delete ptr_;
-				delete count_;
-				count_ = 0;
+		shared_ptr& operator=(const shared_ptr & other)
+		{
+			if (this != &other){
+				release();
+				_ptr = other._ptr;
+				ref = other.ref;
+				if (ref) ++(*ref);
 			}
+
+			return *this;
 		}
+
 		explicit operator bool() const
 		{
-			return (ptr_ != nullptr);
+			return _ptr != nullptr;
 		}
 
 		T* get() const
 		{
-			return ptr_;
+			return _ptr;
 		}
 
 		long use_count() const
 		{
-			return (count_ ? *count_ : 0);
+			return *this ? *ref : 0;
 		}
 
 		T& operator*() const
 		{
-			return *ptr_;
+			return *_ptr;
 		}
 
 		T* operator->() const
 		{
-			return ptr_;
-		}
-		template <typename T2>
-		bool operator==(const shared_ptr<T2> &other) const
-		{
-			return (ptr_ == other.ptr_);
+			return _ptr;
 		}
 
-		void swap(shared_ptr& x) noexcept
+		template <typename U>
+		bool operator==(const shared_ptr<U> &other) const
 		{
-			std::swap(ptr_, x.ptr_);
-			std::swap(count_, x.count_);
+			return (_ptr == other._ptr);
+		}
+
+		void swap(shared_ptr& x) //noexcept
+		{
+			std::swap(_ptr, x._ptr);
+			std::swap(ref, x.ref);
 		}
 
 		void reset(T *ptr = 0)
 		{
-			if (ptr_ != ptr) {
-				decrement_counter();
-				ptr_ = ptr;
-				if (ptr) {
-					count_ = new size_t(0);
-					if (ptr_) {
-						++(*count_);
-					}
-				}
-			}
+			release();
+			_ptr = ptr;
+			if (_ptr)
+				ref = new long(1);
+			else
+				ref = nullptr;
 		}
 
 	private:
-		T* ptr_;
-		size_t* count_;
-
+		T* _ptr;
+		long *ref;
+		void release()
+		{
+			if (_ptr &&  ref && (!--(*ref))){
+				delete _ptr;
+				delete ref;
+				ref = 0;
+			}
+		}
 	};
 } // namespace stepik

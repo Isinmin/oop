@@ -4,7 +4,7 @@
 #include <iostream>
 void Trapezium::print(std::ostream& OS) const {
 	OS << "TRAPEZIUM" << std::endl;
-	OS << "Color: " << color.R << " " << color.G << " " << color.B << std::endl;
+	OS << "Color: " << (int)color.R << " " << (int) color.G << " " << (int) color.B << std::endl;
 	OS << "id: " << id << std::endl;
 }
 bool Trapezium::is_trapezium(const std::vector<Dot>& v) {
